@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Livro De Receitas - Culinaria</string>
+    <string name="no_recipe">Não foi encontrada nenhuma receita!</string>
+    <string name="message_error">Algo aconteceu, tente novamente mais tarde.</string>
+    <string name="no_network">Por favor verifique sua internet!</string>
+    <string name="recipe_image">Imagem que define Receita</string>
+    <string name="ingredients">Ingredientes</string>
+    <string name="message_info">Aviso</string>
+</resources>
