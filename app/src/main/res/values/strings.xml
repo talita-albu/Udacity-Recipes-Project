@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name_identifier">LivroDeReceitas</string>
     <string name="app_name">Livro De Receitas - Culinaria</string>
     <string name="no_recipe">Não foi encontrada nenhuma receita!</string>
     <string name="message_error">Algo aconteceu, tente novamente mais tarde.</string>
@@ -7,4 +8,7 @@
     <string name="ingredients">Ingredientes</string>
     <string name="message_info">Aviso</string>
     <string name="step">Step %d</string>
+    <string name="appwidget_text">Receitas</string>
+    <string name="add_widget">Adicione o Widget</string>
+    <string name="widget_key">widget_key</string>
 </resources>

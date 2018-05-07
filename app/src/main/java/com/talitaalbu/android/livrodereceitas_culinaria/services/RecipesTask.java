@@ -19,9 +19,9 @@ import okhttp3.Response;
 
 public class RecipesTask extends AsyncTask<List<Recipe>, Void, List<Recipe>> {
 
-    public static final String RECIPES_API_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+    private static final String RECIPES_API_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
-    private ProgressBar mProgressBar;
+    private final ProgressBar mProgressBar;
     public RecipesTask(ProgressBar progressBar){
         mProgressBar = progressBar;
     }
@@ -54,7 +54,7 @@ public class RecipesTask extends AsyncTask<List<Recipe>, Void, List<Recipe>> {
             mProgressBar.setVisibility(View.INVISIBLE);
     }
 
-    public static String run(String url) throws IOException {
+    private static String run(String url) throws IOException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         Response response = client.newCall(request).execute();

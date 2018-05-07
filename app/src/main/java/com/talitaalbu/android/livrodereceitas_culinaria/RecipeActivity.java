@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.talitaalbu.android.livrodereceitas_culinaria.adapter.IngredientAdapter;
-import com.talitaalbu.android.livrodereceitas_culinaria.adapter.RecipeAdapter;
 import com.talitaalbu.android.livrodereceitas_culinaria.adapter.StepAdapter;
 import com.talitaalbu.android.livrodereceitas_culinaria.fragment.StepDetailFragment;
 import com.talitaalbu.android.livrodereceitas_culinaria.model.Ingredient;
@@ -46,8 +45,8 @@ public class RecipeActivity extends AppCompatActivity {
     @BindView((R.id.tvInformation))
     TextView tvInformation;
 
-    Recipe mRecipe;
-    boolean mTablet;
+    private Recipe mRecipe;
+    private boolean mTablet;
 
     @Nullable
     //private RecipeIdlingResource mIdlingResource;

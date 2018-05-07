@@ -9,6 +9,8 @@ public class Ingredient implements Parcelable {
      String measure;
      String ingredient;
 
+    public Ingredient(){}
+
     protected Ingredient(Parcel in) {
         quantity = in.readString();
         measure = in.readString();
@@ -43,7 +45,7 @@ public class Ingredient implements Parcelable {
         return quantity;
     }
 
-    public String getType() {
+    public String getMeasure() {
         return measure;
     }
 
@@ -55,8 +57,9 @@ public class Ingredient implements Parcelable {
     public String toString() {
         return "Ingredient{" +
                 "quantity='" + quantity + '\'' +
-                ", type='" + measure + '\'' +
+                ", measure='" + measure + '\'' +
                 ", ingredient='" + ingredient + '\'' +
                 '}';
     }
+
 }

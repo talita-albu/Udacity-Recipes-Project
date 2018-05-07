@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.constraint.ConstraintLayout;
 import android.support.test.espresso.IdlingResource;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.talitaalbu.android.livrodereceitas_culinaria.adapter.RecipeAdapter;
 import com.talitaalbu.android.livrodereceitas_culinaria.services.RecipesTask;
+import com.talitaalbu.android.livrodereceitas_culinaria.testeutil.RecipeIdlingResource;
 
 import java.util.concurrent.ExecutionException;
 
@@ -33,19 +35,21 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout mMessageRecipeLayout;
     @BindView((R.id.tvInformation))
     TextView tvInformation;
+    @BindView(R.id.pull_to_refresh)
+    SwipeRefreshLayout mPullToRefresh;
 
     @Nullable
-    //private RecipeIdlingResource mIdlingResource;
+    private RecipeIdlingResource mIdlingResource;
 
     @VisibleForTesting
     @NonNull
-//    public IdlingResource getIdlingResource() {
-//
-//        if (mIdlingResource == null) {
-//            mIdlingResource = new RecipeIdlingResource();
-//        }
-//        return mIdlingResource;
-//    }
+    public IdlingResource getIdlingResource() {
+
+        if (mIdlingResource == null) {
+            mIdlingResource = new RecipeIdlingResource();
+        }
+        return mIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +61,24 @@ public class MainActivity extends AppCompatActivity {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mRecyclerRecipe.setLayoutManager(manager);
+        mPullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadRecipes();
+            }
+        });
 
+        getIdlingResource();
+        mIdlingResource.setIdleState(false);
+
+        loadRecipes();
+    }
+
+    private void loadRecipes()
+    {
         try {
             if (RecipesTask.isConected(this)) {
+                mPullToRefresh.setRefreshing(true);
 
                 setupRecyclerView();
                 RecipesTask task = new RecipesTask(mPbRecipe);
@@ -67,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (adapter != null && adapter.getItemCount() > 0) {
                     mRecyclerRecipe.setAdapter(adapter);
+                    mPullToRefresh.setRefreshing(false);
+
+                    mMessageRecipeLayout.setVisibility(View.INVISIBLE);
+                    mPbRecipe.setVisibility(View.INVISIBLE);
+                    mRecyclerRecipe.setVisibility(View.VISIBLE);
+
                 } else {
                     mMessageRecipeLayout.setVisibility(View.VISIBLE);
                     mPbRecipe.setVisibility(View.INVISIBLE);
@@ -74,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     tvInformation.setText(this.getString(R.string.no_recipe));
                 }
             } else {
+                mPullToRefresh.setRefreshing(false);
                 mMessageRecipeLayout.setVisibility(View.VISIBLE);
                 mPbRecipe.setVisibility(View.INVISIBLE);
                 mRecyclerRecipe.setVisibility(View.INVISIBLE);
@@ -84,20 +110,21 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+        mIdlingResource.setIdleState(true);
     }
 
     private void setupRecyclerView() {
         mRecyclerRecipe.setHasFixedSize(true);
 
-//        boolean twoPaneMode = getResources().getBoolean(R.bool.twoPaneMode);
-//        if (twoPaneMode) {
-//            mRecyclerRecipe.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
-//        } else {
-//            mRecyclerRecipe.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-//        }
+        boolean tablet = getResources().getBoolean(R.bool.tablet);
+        if (tablet) {
+            mRecyclerRecipe.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+        } else {
+            mRecyclerRecipe.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+        }
 
         mRecyclerRecipe.addItemDecoration(new SpacingItemDecoration((int) getResources().getDimension(R.dimen.margin_medium)));
-        //mRecyclerRecipe.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener());
     }
 }
 

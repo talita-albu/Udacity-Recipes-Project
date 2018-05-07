@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.talitaalbu.android.livrodereceitas_culinaria.R;
 import com.talitaalbu.android.livrodereceitas_culinaria.RecipeActivity;
 import com.talitaalbu.android.livrodereceitas_culinaria.model.Recipe;
+import com.talitaalbu.android.livrodereceitas_culinaria.widget.WidgetService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,10 @@ import butterknife.ButterKnife;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHoler> {
 
-    public static String SEND_STEPS = "STEPS";
-    public static String SEND_INGREDIENTS = "INGRIDIENTS";
-    public static String SEND_RECIPE_NAME = "RECIPE";
+    public static final String ACTION_SHOW_RECIPES =  "SHOW_RECIPE";
+    public static final String SEND_STEPS = "STEPS";
+    public static final String SEND_INGREDIENTS = "INGRIDIENTS";
+    public static final String SEND_RECIPE_NAME = "RECIPE";
 
     List<Recipe> mRecipes;
     Context mContext;
@@ -78,11 +80,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
             intent.putExtras(bundle);
 
-//            Intent intentWidget = new Intent(mContext, CookingAppWidget.class);
-//            intentWidget.setAction(Constants.ACTION_SHOW_RECIPES);
-//            bundle.putParcelableArrayList(Constants.SEND_INGREDIENTS, (ArrayList<? extends Parcelable>) mRecipe.getIngredients());
-//            intentWidget.putExtras(bundle);
-//            mContext.sendBroadcast(intentWidget);
+            WidgetService.updateWidget(mContext, mRecipe);
 
             mContext.startActivity(intent);
         }

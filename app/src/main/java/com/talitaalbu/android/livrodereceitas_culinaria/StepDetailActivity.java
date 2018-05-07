@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.talitaalbu.android.livrodereceitas_culinaria.adapter.StepFragmentAdapter;
-import com.talitaalbu.android.livrodereceitas_culinaria.model.Recipe;
 import com.talitaalbu.android.livrodereceitas_culinaria.model.Step;
 
 import java.util.ArrayList;

@@ -26,7 +26,6 @@ import com.google.android.exoplayer2.util.Util;
 import com.talitaalbu.android.livrodereceitas_culinaria.R;
 import com.talitaalbu.android.livrodereceitas_culinaria.model.Step;
 
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,8 +83,8 @@ public class StepDetailFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-        if (!TextUtils.isEmpty(mStep.getVideo()))
-            initializePlayer(Uri.parse(mStep.getVideo()));
+        if (!TextUtils.isEmpty(mStep.getVideoURL()))
+            initializePlayer(Uri.parse(mStep.getVideoURL()));
         else if(!TextUtils.isEmpty(mStep.getThumbnailURL()))
         {
             initializePlayer(Uri.parse(mStep.getThumbnailURL()));

@@ -2,22 +2,33 @@ package com.talitaalbu.android.livrodereceitas_culinaria.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Base64;
+import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe implements Parcelable {
 
-    String name;
-    List<Ingredient> ingredients;
-    List<Step> steps;
-    String servings;
+    private String name;
+    private List<Ingredient> ingredients;
+    private List<Step> steps;
+    private String servings;
 
     public Recipe() {
     }
 
-    public Recipe(Parcel in) {
-        name = in.readString();
-        servings = in.readString();
+    private Recipe(Parcel in) {
+        this.servings = in.readString();
+        this.name = in.readString();
+        this.ingredients = new ArrayList<>();
+        in.readList(this.ingredients, Ingredient.class.getClassLoader());
+        this.steps = new ArrayList<>();
+        in.readList(this.steps, Step.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
@@ -39,8 +50,10 @@ public class Recipe implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(servings);
+        dest.writeString(this.servings);
+        dest.writeString(this.name);
+        dest.writeList(this.ingredients);
+        dest.writeList(this.steps);
     }
 
     public String getName() {
@@ -80,4 +93,27 @@ public class Recipe implements Parcelable {
                 ", servings='" + servings + '\'' +
                 '}';
     }
+
+    public static String toBase64String(Recipe recipe) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return Base64.encodeToString(mapper.writeValueAsBytes(recipe), 0);
+        } catch (JsonProcessingException e) {
+            Log.d("APPRECEITA", e.getMessage());
+        }
+        return null;
+    }
+
+    public static Recipe fromBase64(String encoded) {
+        if (!"".equals(encoded)) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(Base64.decode(encoded, 0), Recipe.class);
+            } catch (IOException e) {
+                Log.d("APPRECEITA", e.getMessage());
+            }
+        }
+        return null;
+    }
+
 }

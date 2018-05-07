@@ -53,7 +53,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             StringBuilder builder = new StringBuilder();
             builder.append(ingredient.getQuantity());
             builder.append(" ");
-            builder.append(ingredient.getType());
+            builder.append(ingredient.getMeasure());
             builder.append(" - - ");
             builder.append(ingredient.getIngredient());
 
