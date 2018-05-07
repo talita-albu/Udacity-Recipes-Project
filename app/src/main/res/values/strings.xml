@@ -6,4 +6,5 @@
     <string name="recipe_image">Imagem que define Receita</string>
     <string name="ingredients">Ingredientes</string>
     <string name="message_info">Aviso</string>
+    <string name="step">Step %d</string>
 </resources>

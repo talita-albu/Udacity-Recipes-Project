@@ -1,6 +1,8 @@
 package com.talitaalbu.android.livrodereceitas_culinaria;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -15,18 +17,19 @@ import android.widget.TextView;
 import com.talitaalbu.android.livrodereceitas_culinaria.adapter.IngredientAdapter;
 import com.talitaalbu.android.livrodereceitas_culinaria.adapter.RecipeAdapter;
 import com.talitaalbu.android.livrodereceitas_culinaria.adapter.StepAdapter;
+import com.talitaalbu.android.livrodereceitas_culinaria.fragment.StepDetailFragment;
 import com.talitaalbu.android.livrodereceitas_culinaria.model.Ingredient;
 import com.talitaalbu.android.livrodereceitas_culinaria.model.Recipe;
 import com.talitaalbu.android.livrodereceitas_culinaria.model.Step;
-import com.talitaalbu.android.livrodereceitas_culinaria.services.RecipesTask;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.talitaalbu.android.livrodereceitas_culinaria.adapter.RecipeAdapter.SEND_INGREDIENTS;
+import static com.talitaalbu.android.livrodereceitas_culinaria.adapter.RecipeAdapter.SEND_RECIPE_NAME;
 import static com.talitaalbu.android.livrodereceitas_culinaria.adapter.RecipeAdapter.SEND_STEPS;
 
 
@@ -44,6 +47,7 @@ public class RecipeActivity extends AppCompatActivity {
     TextView tvInformation;
 
     Recipe mRecipe;
+    boolean mTablet;
 
     @Nullable
     //private RecipeIdlingResource mIdlingResource;
@@ -66,6 +70,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         mRecipe = new Recipe();
 
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(SEND_INGREDIENTS)) {
             List<Ingredient> ingredients = bundle.getParcelableArrayList(SEND_INGREDIENTS);
@@ -77,8 +82,22 @@ public class RecipeActivity extends AppCompatActivity {
             mRecipe.setSteps(steps);
         }
 
+        if (bundle != null && bundle.containsKey(SEND_RECIPE_NAME)) {
+               mRecipe.setName(bundle.getString(SEND_RECIPE_NAME));
+        }
+
+        mTablet = getResources().getBoolean(R.bool.tablet);
+        if (mTablet) {
+
+            // If there is no fragment state and the recipe contains steps, show the 1st one
+            if (savedInstanceState == null && !mRecipe.getSteps().isEmpty()) {
+                showStep(0);
+            }
+        }
+
         fillInformation();
     }
+
 
     public void fillInformation() {
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -94,7 +113,13 @@ public class RecipeActivity extends AppCompatActivity {
         mRecyclerIngredients.setHasFixedSize(true);
 
         IngredientAdapter adapter = new IngredientAdapter(mRecipe.getIngredients(), this);
-        StepAdapter sAdapter = new StepAdapter(mRecipe.getSteps(), this);
+        StepAdapter sAdapter = new StepAdapter(mRecipe.getSteps(), this, new StepAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                showStep(position);
+            }
+        });
+
 
         if (adapter != null && adapter.getItemCount() > 0) {
             mRecyclerIngredients.setAdapter(adapter);
@@ -113,6 +138,24 @@ public class RecipeActivity extends AppCompatActivity {
             mPbRecipe.setVisibility(View.INVISIBLE);
             mRecyclerSteps.setVisibility(View.INVISIBLE);
             tvInformation.setText(this.getString(R.string.message_error));
+        }
+    }
+
+    private void showStep(int position) {
+        if (mTablet) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(StepDetailFragment.STEP_KEY, mRecipe.getSteps().get(position));
+            StepDetailFragment fragment = new StepDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.recipe_step_detail_container, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, StepDetailActivity.class);
+            intent.putParcelableArrayListExtra(SEND_STEPS, (ArrayList<? extends Parcelable>) mRecipe.getSteps());
+            intent.putExtra(StepDetailActivity.STEP_SELECTED_KEY, position);
+            intent.putExtra(SEND_RECIPE_NAME, mRecipe.getName());
+            startActivity(intent);
         }
     }
 }

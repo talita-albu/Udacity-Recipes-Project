@@ -67,6 +67,10 @@ public class Recipe implements Parcelable {
         this.steps = steps;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Recipe{" +

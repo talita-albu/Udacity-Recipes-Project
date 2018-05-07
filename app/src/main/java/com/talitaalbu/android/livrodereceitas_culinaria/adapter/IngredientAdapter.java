@@ -50,7 +50,15 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             ButterKnife.bind(this, itemView);
         }
         public void onBind(Ingredient ingredient){
-            mTvDescription.setText(ingredient.getIngredient());
+            StringBuilder builder = new StringBuilder();
+            builder.append(ingredient.getQuantity());
+            builder.append(" ");
+            builder.append(ingredient.getType());
+            builder.append(" - - ");
+            builder.append(ingredient.getIngredient());
+
+
+            mTvDescription.setText(builder.toString());
         }
     }
 }

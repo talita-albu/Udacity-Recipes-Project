@@ -24,6 +24,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     public static String SEND_STEPS = "STEPS";
     public static String SEND_INGREDIENTS = "INGRIDIENTS";
+    public static String SEND_RECIPE_NAME = "RECIPE";
 
     List<Recipe> mRecipes;
     Context mContext;
@@ -72,6 +73,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(SEND_STEPS, (ArrayList<? extends Parcelable>) mRecipe.getSteps());
             bundle.putParcelableArrayList(SEND_INGREDIENTS, (ArrayList<? extends Parcelable>) mRecipe.getIngredients());
+            bundle.putString(SEND_RECIPE_NAME, mRecipe.getName());
 
 
             intent.putExtras(bundle);

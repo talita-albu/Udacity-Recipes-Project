@@ -8,13 +8,13 @@ public class Step implements Parcelable {
     int id;
     String shortDescription;
     String description;
-    String video;
+    String videoURL;
     String thumbnailURL;
 
     protected Step(Parcel in) {
         shortDescription = in.readString();
         description = in.readString();
-        video = in.readString();
+        videoURL = in.readString();
         thumbnailURL = in.readString();
     }
 
@@ -39,7 +39,7 @@ public class Step implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(shortDescription);
         dest.writeString(description);
-        dest.writeString(video);
+        dest.writeString(videoURL);
         dest.writeString(thumbnailURL);
     }
 
@@ -60,7 +60,7 @@ public class Step implements Parcelable {
     }
 
     public String getVideo() {
-        return video;
+        return videoURL;
     }
 
     public String getThumbnailURL() {

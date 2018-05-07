@@ -20,10 +20,12 @@ import butterknife.ButterKnife;
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder>{
     List<Step> mSteps;
     Context mContext;
+    StepAdapter.OnItemClickListener mOnItemClickListener;
 
-    public StepAdapter(List<Step> steps, Context context) {
+    public StepAdapter(List<Step> steps, Context context,OnItemClickListener listener ) {
         mSteps = steps;
         mContext = context;
+        mOnItemClickListener = listener;
     }
 
     @Override
@@ -33,8 +35,15 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
     }
 
     @Override
-    public void onBindViewHolder(StepViewHolder stepViewHoler, int position) {
+    public void onBindViewHolder(StepViewHolder stepViewHoler, final int position) {
         stepViewHoler.onBind(mSteps.get(position), position);
+        stepViewHoler.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null)
+                    mOnItemClickListener.onItemClick(position);
+            }
+        });
     }
 
     @Override
@@ -54,13 +63,17 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
         }
         public void onBind(Step step, int position){
             mTvOrder.setText(String.valueOf(position));
-            mTvDescription.setText(step.getDescription());
+            mTvDescription.setText(step.getShortDescription());
         }
 
         @Override
         public void onClick(View view) {
 
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 
 }
